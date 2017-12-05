@@ -3,9 +3,9 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 #定义变量
 IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
-web="http://"; 
-MirrorHost='m.67cc.cn';
-ServerLocation='ssrs';
+web="https://"; 
+MirrorHost='raw.githubusercontent.com/echo-marisn/ssv2/master';
+ServerLocation='Download';
 #设置
 function Settings(){
 read -p "请输入数据库密码(默认root)： " mysqlpass
@@ -140,11 +140,13 @@ chmod 0777 /bin/SSR
 echo "配置网络环境..."
 #iptables
 iptables -F
-iptables -X  
+service iptables save
+service iptables restart
 iptables -I INPUT -p tcp -m tcp --dport 22:65535 -j ACCEPT
 iptables -I INPUT -p udp -m udp --dport 22:65535 -j ACCEPT
-iptables-save >/etc/sysconfig/iptables
-echo 'iptables-restore /etc/sysconfig/iptables' >> /etc/rc.local
+service iptables save
+service iptables stop
+chkconfig iptables off
 #守护程序
 yum -y install python-setuptools
 easy_install supervisor

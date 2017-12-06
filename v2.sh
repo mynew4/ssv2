@@ -60,8 +60,8 @@ rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm
 rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-6.rpm   
 fi
 if [ $version == "7" ];then
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-latest-7.noarch.rpm   
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-7.rpm 
+    echo "安装被终止，请在Centos6系统上执行操作..."
+	exit
 fi
 if [ ! $version ];then
     echo "安装被终止，请在Centos系统上执行操作..."

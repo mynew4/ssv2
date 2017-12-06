@@ -19,8 +19,16 @@ fi
 read -p "请输入后台登陆账号，请使用邮箱方式(默认admin@qq.com)： " User
 if [ -z $User ]
 then
-echo  "后台账号：admin@qq.com"
-User=admin@qq.com
+echo  "后台账号：marisn@67cc.cn"
+User=marisn@67cc.cn
+else
+echo "后台账号：$User"
+fi
+read -p "请输入后台登陆密码： " Pass
+if [ -z $Pass ]
+then
+echo  "后台账号：marisn"
+Pass=marisn
 else
 echo "后台账号：$User"
 fi
@@ -41,23 +49,28 @@ else
 echo "SS连接密码：$sspass"
 fi
 }
-function install_sspanel(){
+function check_system(){
 echo "正在部署环境..."
 yum install -y git redhat-lsb curl gawk tar httpd-devel unzip expect
 yum install wget tar gcc gcc-c++ openssl openssl-devel pcre-devel python-devel libevent automake autoconf libtool make -y
 version=`lsb_release -a | grep -e Release|awk -F ":" '{ print $2 }'|awk -F "." '{ print $1 }'`
+echo "正在检查系统..."
 if [ $version == "6" ];then
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-6.rpm  >/dev/null 2>&1
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm   
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-6.rpm   
 fi
 if [ $version == "7" ];then
-    echo "安装被终止，请在Centos6系统上执行操作..."
-    exit
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-latest-7.noarch.rpm   
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-7.rpm 
 fi
 if [ ! $version ];then
     echo "安装被终止，请在Centos系统上执行操作..."
 	exit
 fi
+}
+function install_sspanel(){
+check_system
+clear 
 echo "检查并更新软件..."
 yum update -y
 #lamp
@@ -74,8 +87,8 @@ yum install -y --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-dev
 service php-fpm start
 service httpd restart
 cd /var/www/html
-wget ${web}${MirrorHost}/${ServerLocation}/phpmyadmin.zip >/dev/null 2>&1
-unzip phpmyadmin.zip >/dev/null 2>&1 
+wget ${web}${MirrorHost}/${ServerLocation}/phpmyadmin.zip  
+unzip phpmyadmin.zip   
 rm -f phpmyadmin.zip
 service php-fpm restart
 service httpd restart
@@ -95,25 +108,27 @@ cd /root
 yum -y install m2crypto python-setuptools
 easy_install pip
 pip install cymysql
-wget ${web}${MirrorHost}/${ServerLocation}/SSR.zip >/dev/null 2>&1
-unzip SSR.zip >/dev/null 2>&1
+wget ${web}${MirrorHost}/${ServerLocation}/SSR.zip  
+unzip SSR.zip  
 cd shadowsocks
 cp apiconfig.py userapiconfig.py
 cp mysql.json usermysql.json
 cp config.json user-config.json
-sed -i "5s/123456/$mysqlpass/" /root/shadowsocks/usermysql.json >/dev/null 2>&1
+sed -i "5s/123456/$mysqlpass/" /root/shadowsocks/usermysql.json  
 cd /root
 mysqladmin -u root password $mysqlpass 
 mysql -uroot -p$mysqlpass -e"CREATE DATABASE shadowsocks;" 
 cd /var/www/html
-wget ${web}${MirrorHost}/${ServerLocation}/ss.zip >/dev/null 2>&1
-unzip ss.zip >/dev/null 2>&1
+wget ${web}${MirrorHost}/${ServerLocation}/ss.zip  
+unzip ss.zip  
 rm -rf ss.zip
 cd lib/
 cp config-simple.php config.php
-sed -i "16s/password/$mysqlpass/" /var/www/html/lib/config.php >/dev/null 2>&1
+password=`echo -n $Pass|md5sum`
+sed -i "16s/password/$mysqlpass/" /var/www/html/lib/config.php  
 sed -i "33s/first@blood.com/$User/" /var/www/html/sql/user.sql
 sed -i "33s/LoveFish/$sspass/" /var/www/html/sql/user.sql
+sed -i "33s/c5a4e7e6882845ea7bb4d9462868219b/$password/" /var/www/html/sql/user.sql
 sed -i "33s/10000/$Port/" /var/www/html/sql/user.sql
 cd /var/www/html/sql
 mysql -uroot -p$mysqlpass shadowsocks < invite_code.sql
@@ -173,7 +188,7 @@ echo 你的数据库密码：$mysqlpass
 echo 
 echo 你的后台账号：$User
 echo
-echo 你的后台密码：1993
+echo 你的后台密码：$Pass
 echo
 echo 连接端口：$Port
 echo

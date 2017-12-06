@@ -16,7 +16,7 @@ mysqlpass=root
 else
 echo "数据库密码：$mysqlpass"
 fi
-read -p "请输入后台登陆账号，请使用邮箱方式(默认admin@qq.com)： " User
+read -p "请输入后台登陆账号，请使用邮箱方式(默认marisn@67cc.cn)： " User
 if [ -z $User ]
 then
 echo  "后台账号：marisn@67cc.cn"
@@ -24,7 +24,7 @@ User=marisn@67cc.cn
 else
 echo "后台账号：$User"
 fi
-read -p "请输入后台登陆密码： " Pass
+read -p "请输入后台登陆密码(默认marisn)： " Pass
 if [ -z $Pass ]
 then
 echo  "后台账号：marisn"
@@ -32,7 +32,7 @@ Pass=marisn
 else
 echo "后台账号：$User"
 fi
-read -p "请输入SS连接端口，(默认8080)： " Port
+read -p "请输入SS连接端口(默认8080)： " Port
 if [ -z $Port ]
 then
 echo  "SS连接端口：8080"

@@ -143,7 +143,14 @@ ldconfig
 #安装ss
 yum -y install m2crypto python-setuptools
 easy_install pip
+if [ -z "`pip`" ]; then
+curl -O https://bootstrap.pypa.io/get-pip.py
+python get-pip.py 
+rm -rf *.py
 pip install cymysql
+else
+pip install cymysql
+fi
 cd /root
 git clone -b manyuser https://github.com/shadowsocksrr/shadowsocksr.git "/root/shadowsocks"
 cd /root/shadowsocks
@@ -152,13 +159,10 @@ yum -y install python-devel
 yum -y install libffi-devel
 yum -y install openssl-devel
 pip install -r requirements.txt
-cp apiconfig.py userapiconfig.py
-cp config.json user-config.json
-cp mysql.json usermysql.json
-sed -i "4s/ss/root/" /root/shadowsocks/usermysql.json  
-sed -i "5s/pass/$mysqlpass/" /root/shadowsocks/usermysql.json  
-sed -i "6s/sspanel/shadowsocks/" /root/shadowsocks/usermysql.json  
-sed -i "7s/0/1/" /root/shadowsocks/usermysql.json  
+wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/usermysql.json
+wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/userapiconfig.py
+wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/user-config.json
+sed -i "5s/root/$mysqlpass/" /root/shadowsocks/usermysql.json
 cd /root
 mysqladmin -u root password $mysqlpass 
 mysql -uroot -p$mysqlpass -e"CREATE DATABASE shadowsocks;" 

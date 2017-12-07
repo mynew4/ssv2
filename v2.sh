@@ -24,7 +24,7 @@ else
 	echo '检测你的服务器更适合gitee.com，已选择Gitee资源'
 	sleep 3
 fi
-rm -f ping.pl
+rm -rf ping.pl
 #设置
 function Settings(){
 read -p "请输入数据库密码(默认root)： " mysqlpass

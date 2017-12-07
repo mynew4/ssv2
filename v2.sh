@@ -70,7 +70,7 @@ fi
 }
 #检查系统
 function install_sspanel(){
-yum -y install redhat-lsb*
+yum -y install redhat-lsb* zip unzip 
 File="/usr/bin/lsb_release"
 if [ ! -f "$File" ]; then  
 yum install lsb -y

@@ -4,8 +4,25 @@ export PATH
 #定义变量
 IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
 web="https://"; 
-MirrorHost='raw.githubusercontent.com/echo-marisn/ssv2/master';
 ServerLocation='Download';
+#测试线路
+GIT='raw.githubusercontent.com'
+MY='gitee.com'
+GIT_PING=`ping -c 1 -w 1 $GIT|grep time=|awk '{print $7}'|sed "s/time=//"`
+MY_PING=`ping -c 1 -w 1 $MY|grep time=|awk '{print $7}'|sed "s/time=//"`
+echo "$GIT_PING $GIT" > ping.pl
+echo "$MY_PING $MY" >> ping.pl
+MirrorHost=`sort -V ping.pl|sed -n '1p'|awk '{print $2}'`
+if [ "$MirrorHost" == "$GIT" ];then
+	MirrorHost='raw.githubusercontent.com/echo-marisn/ssv2/master'
+	echo '检测你的服务器更适合github.com，已选择GitHub资源'
+	sleep 3
+else
+	MirrorHost='gitee.com/marisn/ssv2/raw/master'
+	echo '检测你的服务器更适合gitee.com，已选择Gitee资源'
+	sleep 3
+fi
+rm -f ping.pl
 #设置
 function Settings(){
 read -p "请输入数据库密码(默认root)： " mysqlpass
@@ -49,30 +66,23 @@ else
 echo "SS连接密码：$sspass"
 fi
 }
-function check_system(){
-echo "正在部署环境..."
-yum install -y git redhat-lsb curl gawk tar httpd-devel unzip expect
-yum install wget tar gcc gcc-c++ openssl openssl-devel pcre-devel python-devel libevent automake autoconf libtool make -y
+function install_sspanel(){
 version=`lsb_release -a | grep -e Release|awk -F ":" '{ print $2 }'|awk -F "." '{ print $1 }'`
-echo "正在检查系统..."
 if [ $version == "6" ];then
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm   
-rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-6.rpm   
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm  >/dev/null 2>&1
+rpm -ivh ${web}${MirrorHost}/${ServerLocation}/remi-release-6.rpm  >/dev/null 2>&1
 fi
 if [ $version == "7" ];then
+echo 
     echo "安装被终止，请在Centos6系统上执行操作..."
-	exit
+    exit
 fi
 if [ ! $version ];then
+    echo 
     echo "安装被终止，请在Centos系统上执行操作..."
 	exit
 fi
-}
-function install_sspanel(){
-check_system
 clear 
-echo "检查并更新软件..."
-yum update -y
 #lamp
 echo "开始安装LAMP环境" 
 yum -y install httpd 

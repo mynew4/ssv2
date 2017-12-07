@@ -238,7 +238,7 @@ echo 本地端口：1080
 echo
 echo 加密方式：aes-256-cfb
 echo
-echo 协议：auth_sha1
+echo 协议：origin
 echo
 echo 混淆方式：http_simple
 echo

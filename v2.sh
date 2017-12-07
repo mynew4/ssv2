@@ -154,6 +154,7 @@ yum -y install openssl-devel
 pip install -r requirements.txt
 cp apiconfig.py userapiconfig.py
 cp config.json user-config.json
+cp mysql.json usermysql.json
 sed -i "4s/ss/root/" /root/shadowsocks/usermysql.json  
 sed -i "5s/pass/$mysqlpass/" /root/shadowsocks/usermysql.json  
 sed -i "6s/sspanel/shadowsocks/" /root/shadowsocks/usermysql.json  

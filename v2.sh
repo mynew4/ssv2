@@ -169,7 +169,6 @@ wget ${web}${MirrorHost}/${ServerLocation}/ss.zip
 unzip ss.zip  
 rm -rf ss.zip
 cd lib/
-cp config-simple.php config.php
 password=`echo -n $Pass|md5sum|awk '{print $1}'|sed "s/  -//"`
 sed -i "16s/password/$mysqlpass/" /var/www/html/lib/config.php  
 sed -i "33s/first@blood.com/$User/" /var/www/html/sql/user.sql

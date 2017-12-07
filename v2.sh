@@ -6,6 +6,7 @@ IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
 web="https://"; 
 ServerLocation='Download';
 #测试线路
+clear
 GIT='raw.githubusercontent.com'
 MY='gitee.com'
 GIT_PING=`ping -c 1 -w 1 $GIT|grep time=|awk '{print $7}'|sed "s/time=//"`
@@ -66,7 +67,13 @@ else
 echo "SS连接密码：$sspass"
 fi
 }
+#检查系统
 function install_sspanel(){
+yum -y install redhat-lsb*
+File="/usr/bin/lsb_release"
+if [ ! -f "$File" ]; then  
+yum install lsb -y
+fi
 version=`lsb_release -a | grep -e Release|awk -F ":" '{ print $2 }'|awk -F "." '{ print $1 }'`
 if [ $version == "6" ];then
 rpm -ivh ${web}${MirrorHost}/${ServerLocation}/epel-release-6-8.noarch.rpm  >/dev/null 2>&1

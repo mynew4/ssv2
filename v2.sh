@@ -93,7 +93,7 @@ fi
 clear 
 #lamp
 echo "开始安装LAMP环境" 
-yum -y install httpd 
+yum -y install httpd git
 chkconfig httpd on
 /etc/init.d/httpd start
 yum remove -y mysql*

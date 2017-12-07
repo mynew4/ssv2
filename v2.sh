@@ -141,17 +141,23 @@ tar xf libsodium-1.0.13.tar.gz && cd libsodium-1.0.13
 echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
 ldconfig
 #安装ss
-cd /root
 yum -y install m2crypto python-setuptools
 easy_install pip
 pip install cymysql
-wget ${web}${MirrorHost}/${ServerLocation}/SSR.zip  
-unzip SSR.zip  
-cd shadowsocks
+cd /root
+git clone -b manyuser https://github.com/shadowsocksrr/shadowsocksr.git "/root/shadowsocks"
+cd /root/shadowsocks
+yum -y install lsof lrzsz
+yum -y install python-devel
+yum -y install libffi-devel
+yum -y install openssl-devel
+pip install -r requirements.txt
 cp apiconfig.py userapiconfig.py
-cp mysql.json usermysql.json
 cp config.json user-config.json
-sed -i "5s/123456/$mysqlpass/" /root/shadowsocks/usermysql.json  
+sed -i "4s/ss/root/" /root/shadowsocks/usermysql.json  
+sed -i "5s/pass/$mysqlpass/" /root/shadowsocks/usermysql.json  
+sed -i "6s/sspanel/shadowsocks/" /root/shadowsocks/usermysql.json  
+sed -i "7s/0/1/" /root/shadowsocks/usermysql.json  
 cd /root
 mysqladmin -u root password $mysqlpass 
 mysql -uroot -p$mysqlpass -e"CREATE DATABASE shadowsocks;" 
@@ -199,13 +205,6 @@ iptables -I INPUT -p udp -m udp --dport 22:65535 -j ACCEPT
 service iptables save
 service iptables stop
 chkconfig iptables off
-#守护程序
-yum -y install supervisor
-echo_supervisord_conf > /etc/supervisord.conf
-sed -i '$a [program:ss]\ncommand = python /root/shadowsocks/server.py\nuser = root\nautostart = true\nautorestart = true' /etc/supervisord.conf
-supervisord
-echo "/usr/bin/supervisord -c /etc/supervisord.conf" >> /etc/rc.local
-chmod +x /etc/rc.d/rc.local
 }
 function install_success(){
 echo 恭喜！您的SSR服务已启动

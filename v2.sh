@@ -121,6 +121,25 @@ echo 服务已启动
 exit 0;
 " >/bin/lamp
 chmod 0777 /bin/lamp
+#自动选择下载节点
+GIT='raw.githubusercontent.com'
+LIB='download.libsodium.org'
+GIT_PING=`ping -c 1 -w 1 $GIT|grep time=|awk '{print $7}'|sed "s/time=//"`
+LIB_PING=`ping -c 1 -w 1 $LIB|grep time=|awk '{print $7}'|sed "s/time=//"`
+echo "$GIT_PING $GIT" > ping.pl
+echo "$LIB_PING $LIB" >> ping.pl
+libAddr=`sort -V ping.pl|sed -n '1p'|awk '{print $2}'`
+if [ "$libAddr" == "$GIT" ];then
+	libAddr='https://raw.githubusercontent.com/echo-marisn/ssrv3-one-click-script/master/libsodium-1.0.13.tar.gz'
+else
+	libAddr='https://download.libsodium.org/libsodium/releases/libsodium-1.0.13.tar.gz'
+fi
+rm -f ping.pl
+wget --no-check-certificate $libAddr
+tar xf libsodium-1.0.13.tar.gz && cd libsodium-1.0.13
+./configure && make -j2 && make install
+echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
+ldconfig
 #安装ss
 cd /root
 yum -y install m2crypto python-setuptools

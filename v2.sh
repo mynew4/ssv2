@@ -147,10 +147,8 @@ if [ -z "`pip`" ]; then
 curl -O https://bootstrap.pypa.io/get-pip.py
 python get-pip.py 
 rm -rf *.py
-pip install cymysql
-else
-pip install cymysql
 fi
+pip install cymysql
 cd /root
 git clone -b manyuser https://github.com/shadowsocksrr/shadowsocksr.git "/root/shadowsocks"
 cd /root/shadowsocks

@@ -1,6 +1,7 @@
 #!/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
+rm -rf ssr.sh*
 #定义变量
 IPAddress=`wget http://members.3322.org/dyndns/getip -O - -q ; echo`;
 web="https://"; 

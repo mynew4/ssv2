@@ -181,8 +181,7 @@ service iptables save
 service iptables stop
 chkconfig iptables off
 #守护程序
-yum -y install python-setuptools
-easy_install supervisor
+yum -y install supervisor
 echo_supervisord_conf > /etc/supervisord.conf
 sed -i '$a [program:ss]\ncommand = python /root/shadowsocks/server.py\nuser = root\nautostart = true\nautorestart = true' /etc/supervisord.conf
 supervisord

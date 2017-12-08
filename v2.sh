@@ -144,7 +144,7 @@ ldconfig
 yum -y install m2crypto python-setuptools
 easy_install pip
 if [ -z "`pip`" ]; then
-curl -O https://bootstrap.pypa.io/get-pip.py
+wget https://bootstrap.pypa.io/get-pip.py
 python get-pip.py 
 rm -rf *.py
 fi
@@ -156,7 +156,6 @@ yum -y install lsof lrzsz
 yum -y install python-devel
 yum -y install libffi-devel
 yum -y install openssl-devel
-pip install -r requirements.txt
 wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/usermysql.json
 wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/userapiconfig.py
 wget -N -P  /root/shadowsocks/ ${web}${MirrorHost}/${ServerLocation}/user-config.json
